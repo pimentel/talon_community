@@ -210,7 +210,7 @@ symbol_key_words = {
     "right angle": ">",
     "greater than": ">",
     "star": "*",
-    "hash": "#",
+    "pound": "#",
     "percent": "%",
     "caret": "^",
     "amper": "&",
@@ -219,7 +219,7 @@ symbol_key_words = {
     "double quote": '"',
     # Currencies
     "dollar": "$",
-    "pound": "£",
+    # "pound": "£",
 }
 
 # make punctuation words also included in {user.symbol_keys}
@@ -247,7 +247,7 @@ simple_keys = [
 ]
 
 alternate_keys = {
-    "wipe": "backspace",
+    # "wipe": "backspace",
     "delete": "backspace",
     #'junk': 'backspace',
     "forward delete": "delete",

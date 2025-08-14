@@ -13,7 +13,8 @@ tag(): user.generic_unix_shell
 # you can deactivate them if you do not use the application
 tag(): user.git
 tag(): user.anaconda
-tag(): user.kubectl
+#hitag(): user.kubectl
+tag(): user.tmux
 
 # TODO: explain
 tag(): user.tabs

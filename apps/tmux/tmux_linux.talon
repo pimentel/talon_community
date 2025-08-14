@@ -1,7 +1,7 @@
-os: linux
 tag: user.tmux
 -
 mux: "tmux "
+# os: linux
 
 #session management
 mux new session: insert("tmux new ")
@@ -51,3 +51,13 @@ mux close pane:
 mux pane numbers:
     key(ctrl-b)
     key(q)
+mux leave:
+    key(ctrl-b)
+    key(d)
+mux attach: insert('tmux attach-session -t ')
+
+mux toggle:
+    key('f12')
+mux resize pane:
+    key(ctrl-b)
+    key('space')

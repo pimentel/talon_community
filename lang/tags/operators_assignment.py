@@ -1,4 +1,4 @@
-from talon import Context, Module
+from talon import Context, Module, actions
 
 ctx = Context()
 mod = Module()
@@ -10,6 +10,7 @@ mod.tag("code_operators_assignment", desc="Tag for enabling assignment commands"
 class Actions:
     def code_operator_assignment():
         """code_operator_assignment"""
+        actions.insert(" == ")
 
     def code_operator_subtraction_assignment():
         """code_operator_subtraction_assignment"""
