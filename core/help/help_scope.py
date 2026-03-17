@@ -1,10 +1,10 @@
-from talon import Context, Module, actions, imgui, scope, ui
+from talon import Context, Module, actions, imgui, scope, settings, ui
 
 ctx = Context()
 mod = Module()
 mod.tag("help_scope_open", "tag for showing the scope help gui")
 
-setting_max_length = mod.setting(
+mod.setting(
     "help_scope_max_length",
     type=int,
     default=50,
@@ -35,7 +35,7 @@ def gui(gui: imgui.GUI):
             value = scope.get(key)
             print_value(gui, key, value, ignore)
     gui.spacer()
-    if gui.button("Hide"):
+    if gui.button("scope close"):
         actions.user.help_scope_toggle()
 
 
@@ -52,8 +52,9 @@ def print_value(gui: imgui.GUI, path: str, value, ignore: set[str] = {}):
 def format_value(value):
     if isinstance(value, (list, set)):
         value = ", ".join(sorted(value))
-    if isinstance(value, str) and len(value) > setting_max_length.get() + 4:
-        return f"{value[:setting_max_length.get()]} ..."
+    setting_max_length = settings.get("user.help_scope_max_length")
+    if isinstance(value, str) and len(value) > setting_max_length + 4:
+        return f"{value[:setting_max_length]} ..."
     return value
 
 

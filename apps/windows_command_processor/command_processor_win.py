@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from talon import Context, actions, ui
 
@@ -27,10 +28,6 @@ class UserActions:
     def file_manager_refresh_title():
         actions.insert("title Command Prompt: %CD%")
         actions.key("enter")
-        # action(user.file_manager_go_back):
-        #    key("alt-left")
-        # action(user.file_manager_go_forward):
-        #    key("alt-right")
 
     def file_manager_open_parent():
         actions.insert("cd ..")
@@ -83,9 +80,9 @@ class UserActions:
         """file_manager_open_volume"""
         actions.user.file_manager_open_directory(volume)
 
-    def terminal_list_directories():
+    def terminal_list_directories(path: Optional[str] = None):
         """Lists directories"""
-        actions.insert("dir")
+        actions.insert(f"dir {path or ''}")
         actions.key("enter")
 
     def terminal_list_all_directories():

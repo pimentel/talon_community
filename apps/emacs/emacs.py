@@ -1,10 +1,11 @@
 import logging
+import re
 from typing import Optional
 
-from talon import Context, Module, actions
+from talon import Context, Module, actions, settings, ui
 
 mod = Module()
-setting_meta = mod.setting(
+mod.setting(
     "emacs_meta",
     type=str,
     default="esc",
@@ -18,9 +19,9 @@ mod.apps.emacs = """
 os: mac
 app.bundle: org.gnu.Emacs
 """
-mod.apps.emacs = """
+mod.apps.emacs = r"""
 os: windows
-app.exe: emacs.exe
+app.exe: /^emacs\.exe$/i
 """
 
 ctx = Context()
@@ -28,7 +29,7 @@ ctx.matches = "app: emacs"
 
 
 def meta(keys):
-    m = setting_meta.get()
+    m = settings.get("user.emacs_meta")
     if m == "alt":
         return " ".join("alt-" + k for k in keys.split())
     elif m == "cmd":
@@ -155,6 +156,12 @@ class UserActions:
         actions.edit.jump_line(line_start)
         actions.edit.jump_line(line_end + 1)
         actions.user.emacs("exchange-point-and-mark")
+
+    def tab_jump(number: int):
+        actions.user.emacs("tab-select", number)
+
+    def tab_final():
+        actions.user.emacs("tab-last")
 
     # # Version that highlights without transient-mark-mode:
     # def select_range(line_start, line_end):
@@ -356,8 +363,19 @@ class CodeActions:
 
 @ctx.action_class("win")
 class WinActions:
-    # This assumes the title is/contains the filename.
-    # To do this, put this in init.el:
-    # (setq-default frame-title-format '((:eval (buffer-name (window-buffer (minibuffer-selected-window))))))
+    # This assumes the title either is the buffer name or contains the buffer
+    # name before a space-surrounded hyphen. This is the default for the latest
+    # GNU Emacs. If you are not on macOS and your flavor of Emacs defaults to
+    # something incompatible, you may need to put one of the following two
+    # declarations into your init.el ("%b" being replaced by the buffer name):
+    # (setq frame-title-format "%b")
+    # (setq frame-title-format '(multiple-frames "%b" ("" "%b - Emacs at " system-name)))
     def filename():
-        return actions.win.title()
+        # On macOS, get the filename directly
+        if doc := getattr(ui.active_window(), "doc", None):
+            return doc
+
+        # Otherwise, get it from the window title
+        title = actions.win.title()
+        buffer_name = title.split(" - ")[0]
+        return re.sub(r"<[^>]+>$", "", buffer_name)
